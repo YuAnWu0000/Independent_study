@@ -135,22 +135,32 @@ def handle_message(event):
             alt_text='Confirm alt text', template=confirm_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
-    elif event.message.text == 'carousel':
+    elif event.message.text == 'Twitch搜尋功能': #搜尋條件選單
         carousel_template = CarouselTemplate(columns=[
-            CarouselColumn(text='hoge1', title='fuga1', actions=[
-                URITemplateAction(
-                    label='Go to line.me', uri='https://line.me'),
-                PostbackTemplateAction(label='ping', data='ping')
+            CarouselColumn(title='LOL', text='請選擇搜尋條件', thumbnail_image_url= "https://p2.bahamut.com.tw/HOME/creationCover/88/0003709288_B.PNG",
+            actions=[
+                # URITemplateAction(
+                #     label='Go to line.me', uri='https://line.me'),
+                # PostbackTemplateAction(label='ping', data='ping')
+                MessageTemplateAction(label='人氣前十直播頻道', text='LOL top10 streams')
             ]),
-            CarouselColumn(text='hoge2', title='fuga2', actions=[
-                PostbackTemplateAction(
-                    label='ping with text', data='ping',
-                    text='ping'),
-                MessageTemplateAction(label='Translate Rice', text='米')
+            CarouselColumn(title='overwatch', text='請選擇搜尋條件', thumbnail_image_url= "https://d3hmvhl7ru3t12.cloudfront.net/img/logos/overwatch-share-3d5a268515283007bdf3452e877adac466d579f4b44abbd05aa0a98aba582eeaebc4541f1154e57ec5a43693345bebda953381a7b75b58adbd29d3f3eb439ad2.jpg",
+            actions=[
+                # PostbackTemplateAction(
+                #     label='ping with text', data='ping',
+                #     text='ping'),
+                MessageTemplateAction(label='人氣前十直播頻道', text='OW top10 streams')
+            ]),
+            CarouselColumn(title='PUBG', text='請選擇搜尋條件', thumbnail_image_url= "https://y4j7y8s9.ssl.hwcdn.net/wp-content/uploads/2017/05/PUBG.jpg",
+            actions=[
+                # PostbackTemplateAction(
+                #     label='ping with text', data='ping',
+                #     text='ping'),
+                MessageTemplateAction(label='人氣前十直播頻道', text='PUBG top10 streams')
             ]),
         ])
         template_message = TemplateSendMessage(
-            alt_text='Carousel alt text', template=carousel_template)
+            alt_text='搜尋條件選單', template=carousel_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
     elif event.message.text == 'image_carousel':
