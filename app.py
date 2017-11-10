@@ -199,6 +199,78 @@ def handle_message(event):
             alt_text='LOL直播頻道搜尋結果', template=buttons_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
+    elif event.message.text == 'OW top10 streams':
+        client = TwitchClient(client_id='wgfgrtnh8pr5sxp8zu05td1zqeferf')
+        # channels = client.search.channels('LOL', limit=1, offset=420)
+        # print(json.loads(channels[0]))
+        channels = client.streams.get_live_streams(game='Overwatch', limit=10)
+        #print(channels[0]['channel']['url'])
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://d3hmvhl7ru3t12.cloudfront.net/img/logos/overwatch-share-3d5a268515283007bdf3452e877adac466d579f4b44abbd05aa0a98aba582eeaebc4541f1154e57ec5a43693345bebda953381a7b75b58adbd29d3f3eb439ad2.jpg',
+            title='OW人氣前十直播頻道',
+            text='搜尋結果',
+            actions=[ #最多四個
+                URITemplateAction(
+                    label=channels[0]['channel']['display_name'], uri=channels[0]['channel']['url']),
+                URITemplateAction(
+                    label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
+                URITemplateAction(
+                    label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
+                URITemplateAction(
+                    label=channels[3]['channel']['display_name'], uri=channels[3]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[4]['channel']['display_name'], uri=channels[4]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[5]['channel']['display_name'], uri=channels[5]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[6]['channel']['display_name'], uri=channels[6]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[7]['channel']['display_name'], uri=channels[7]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[8]['channel']['display_name'], uri=channels[8]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[9]['channel']['display_name'], uri=channels[9]['channel']['url'])
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='OW直播頻道搜尋結果', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'PUBG top10 streams':
+        client = TwitchClient(client_id='wgfgrtnh8pr5sxp8zu05td1zqeferf')
+        # channels = client.search.channels('LOL', limit=1, offset=420)
+        # print(json.loads(channels[0]))
+        channels = client.streams.get_live_streams(game="PLAYERUNKNOWN'S BATTLEGROUNDS", limit=10)
+        #print(channels[0]['channel']['url'])
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://y4j7y8s9.ssl.hwcdn.net/wp-content/uploads/2017/05/PUBG.jpg',
+            title='PUBG人氣前十直播頻道',
+            text='搜尋結果',
+            actions=[ #最多四個
+                URITemplateAction(
+                    label=channels[0]['channel']['display_name'], uri=channels[0]['channel']['url']),
+                URITemplateAction(
+                    label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
+                URITemplateAction(
+                    label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
+                URITemplateAction(
+                    label=channels[3]['channel']['display_name'], uri=channels[3]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[4]['channel']['display_name'], uri=channels[4]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[5]['channel']['display_name'], uri=channels[5]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[6]['channel']['display_name'], uri=channels[6]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[7]['channel']['display_name'], uri=channels[7]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[8]['channel']['display_name'], uri=channels[8]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[9]['channel']['display_name'], uri=channels[9]['channel']['url'])
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='PUBG直播頻道搜尋結果', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
     elif event.message.text == 'image_carousel':
         image_carousel_template = ImageCarouselTemplate(columns=[
             ImageCarouselColumn(image_url='https://via.placeholder.com/1024x1024',
