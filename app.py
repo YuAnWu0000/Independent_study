@@ -135,7 +135,7 @@ def handle_message(event):
             alt_text='Confirm alt text', template=confirm_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
-    elif event.message.text == 'Twitch搜尋功能': #搜尋條件選單
+    elif event.message.text == 'Twitch搜尋功能': #遊戲搜尋條件選單
         carousel_template = CarouselTemplate(columns=[
             CarouselColumn(title='LOL', text='請選擇搜尋條件', thumbnail_image_url= "https://p2.bahamut.com.tw/HOME/creationCover/88/0003709288_B.PNG",
             actions=[
@@ -160,7 +160,43 @@ def handle_message(event):
             ]),
         ])
         template_message = TemplateSendMessage(
-            alt_text='搜尋條件選單', template=carousel_template)
+            alt_text='遊戲搜尋條件選單', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'LOL top10 streams':
+        client = TwitchClient(client_id='wgfgrtnh8pr5sxp8zu05td1zqeferf')
+        # channels = client.search.channels('LOL', limit=1, offset=420)
+        # print(json.loads(channels[0]))
+        channels = client.streams.get_live_streams(game='League of Legends', limit=10)
+        #print(channels[0]['channel']['url'])
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://p2.bahamut.com.tw/HOME/creationCover/88/0003709288_B.PNG',
+            title='LOL人氣前十直播頻道',
+            text='搜尋結果',
+            actions=[ #最多四個
+                URITemplateAction(
+                    label=channels[0]['channel']['display_name'], uri=channels[0]['channel']['url']),
+                URITemplateAction(
+                    label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
+                URITemplateAction(
+                    label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
+                URITemplateAction(
+                    label=channels[3]['channel']['display_name'], uri=channels[3]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[4]['channel']['display_name'], uri=channels[4]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[5]['channel']['display_name'], uri=channels[5]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[6]['channel']['display_name'], uri=channels[6]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[7]['channel']['display_name'], uri=channels[7]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[8]['channel']['display_name'], uri=channels[8]['channel']['url']),
+                # URITemplateAction(
+                #     label=channels[9]['channel']['display_name'], uri=channels[9]['channel']['url'])
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='LOL直播頻道搜尋結果', template=buttons_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
     elif event.message.text == 'image_carousel':
@@ -190,8 +226,8 @@ if __name__ == "__main__":
     client = TwitchClient(client_id='wgfgrtnh8pr5sxp8zu05td1zqeferf')
     # channels = client.search.channels('LOL', limit=1, offset=420)
     # print(json.loads(channels[0]))
-    channels = client.streams.get_live_streams(game='overwatch', limit=10)
-    print(channels[0]['channel']['url'])
+    channels = client.streams.get_live_streams(game='League of Legends', limit=10)
+    print(channels[0])
     # data = json.loads(str(channels[0]['channel']))
     # print(data)
     #print(json.loads(channels[1]))
