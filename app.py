@@ -63,11 +63,33 @@ def handle_follow(event):
             # PostbackTemplateAction(
             #     label='ping with text', data='ping',
             #     text='ping'),
-            MessageTemplateAction(label='Twitch搜尋功能', text='Twitch搜尋功能')
+            MessageTemplateAction(label='Twitch遊戲搜尋功能', text='Twitch遊戲搜尋功能')
         ])
     template_message = TemplateSendMessage(
         alt_text='主選單', template=buttons_template)
     line_bot_api.reply_message(event.reply_token, template_message)
+
+@handler.add(PostbackEvent) #用戶成為朋友或解除封鎖
+def handle_follow(event):
+    if event.postback.data == 'ping':
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://www-cdn.jtvnw.net/images/twitch_logo3.jpg',
+            title='Fuck',
+            text='請選擇服務',
+            actions=[
+                URITemplateAction(
+                    label='Twitch官方網頁', uri='https://go.twitch.tv/'),
+                # PostbackTemplateAction(label='ping', data='ping'),
+                # PostbackTemplateAction(
+                #     label='ping with text', data='ping',
+                #     text='ping'),
+                MessageTemplateAction(label='Twitch遊戲搜尋功能', text='Twitch遊戲搜尋功能')
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='主選單', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+    else:
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='錯了啦幹!'))
 
 
 @handler.add(MessageEvent, message=TextMessage) #接收到訊息
@@ -102,7 +124,7 @@ def handle_message(event):
                 # PostbackTemplateAction(
                 #     label='ping with text', data='ping',
                 #     text='ping'),
-                MessageTemplateAction(label='Twitch搜尋功能', text='Twitch搜尋功能')
+                MessageTemplateAction(label='Twitch遊戲搜尋功能', text='Twitch遊戲搜尋功能')
             ])
         template_message = TemplateSendMessage(
             alt_text='主選單', template=buttons_template)
@@ -135,29 +157,48 @@ def handle_message(event):
             alt_text='Confirm alt text', template=confirm_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
-    elif event.message.text == 'Twitch搜尋功能': #遊戲搜尋條件選單
+    elif event.message.text == 'Twitch遊戲搜尋功能': #遊戲搜尋條件選單
         carousel_template = CarouselTemplate(columns=[
-            CarouselColumn(title='LOL', text='請選擇搜尋條件', thumbnail_image_url= "https://p2.bahamut.com.tw/HOME/creationCover/88/0003709288_B.PNG",
+            CarouselColumn(title='League of Legends', text='請選擇搜尋條件', thumbnail_image_url= "https://esetireland.files.wordpress.com/2014/12/league.jpg",
             actions=[
-                # URITemplateAction(
-                #     label='Go to line.me', uri='https://line.me'),
-                # PostbackTemplateAction(label='ping', data='ping')
-                MessageTemplateAction(label='人氣前十直播頻道', text='LOL top10 streams')
+                MessageTemplateAction(label='人氣前十直播頻道', text='LOL top10 live streams')
             ]),
-            CarouselColumn(title='overwatch', text='請選擇搜尋條件', thumbnail_image_url= "https://d3hmvhl7ru3t12.cloudfront.net/img/logos/overwatch-share-3d5a268515283007bdf3452e877adac466d579f4b44abbd05aa0a98aba582eeaebc4541f1154e57ec5a43693345bebda953381a7b75b58adbd29d3f3eb439ad2.jpg",
+            CarouselColumn(title="PLAYERUNKNOWN'S BATTLEGROUNDS", text='請選擇搜尋條件', thumbnail_image_url= "https://y4j7y8s9.ssl.hwcdn.net/wp-content/uploads/2017/05/PUBG.jpg",
             actions=[
-                # PostbackTemplateAction(
-                #     label='ping with text', data='ping',
-                #     text='ping'),
-                MessageTemplateAction(label='人氣前十直播頻道', text='OW top10 streams')
+                MessageTemplateAction(label='人氣前十直播頻道', text='PUBG top10 live streams')
             ]),
-            CarouselColumn(title='PUBG', text='請選擇搜尋條件', thumbnail_image_url= "https://y4j7y8s9.ssl.hwcdn.net/wp-content/uploads/2017/05/PUBG.jpg",
+            CarouselColumn(title='Dota 2', text='請選擇搜尋條件', thumbnail_image_url= "https://cdn.pastemagazine.com/www/articles/dota%202%20ranking%20main%201.jpg",
             actions=[
-                # PostbackTemplateAction(
-                #     label='ping with text', data='ping',
-                #     text='ping'),
-                MessageTemplateAction(label='人氣前十直播頻道', text='PUBG top10 streams')
+                MessageTemplateAction(label='人氣前十直播頻道', text='Dota2 top10 live streams')
             ]),
+            CarouselColumn(title='Overwatch', text='請選擇搜尋條件', thumbnail_image_url= "https://static.comicvine.com/uploads/original/12/128535/5313253-5680873614-Cdr5H.jpg",
+            actions=[
+                MessageTemplateAction(label='人氣前十直播頻道', text='OW top10 live streams')
+            ]),
+            CarouselColumn(title='World of Warcraft', text='請選擇搜尋條件', thumbnail_image_url= "https://cdns.kinguin.net/media/category/5/-/5-1024-1024_5.jpg",
+            actions=[
+                MessageTemplateAction(label='人氣前十直播頻道', text='World of Warcraft top10 live streams')
+            ]),
+            CarouselColumn(title='Hearthstone', text='請選擇搜尋條件', thumbnail_image_url= "https://www.dualshockers.com/wp-content/uploads/2014/04/maxresdefault3.jpg",
+            actions=[
+                MessageTemplateAction(label='人氣前十直播頻道', text='Hearthstone top10 live streams')
+            ]),
+            CarouselColumn(title='StarCraft II', text='請選擇搜尋條件', thumbnail_image_url= "https://www.hrkgame.com/media/games/.thumbnails/Pic.jpg/Pic-460x215.jpg",
+            actions=[
+                MessageTemplateAction(label='人氣前十直播頻道', text='StarCraft II top10 live streams')
+            ]),
+            CarouselColumn(title='Counter-Strike: Global Offensive', text='請選擇搜尋條件', thumbnail_image_url= "https://www.gizorama.com/wp-content/uploads/2016/07/csgo-660x330.png",
+            actions=[
+                MessageTemplateAction(label='人氣前十直播頻道', text='CSGO top10 streams')
+            ]),
+            CarouselColumn(title='Minecraft', text='請選擇搜尋條件', thumbnail_image_url= "https://thetechportal.com/wp-content/uploads/2017/05/minecraft-mew-990x452.jpg",
+            actions=[
+                MessageTemplateAction(label='人氣前十直播頻道', text='Minecraft top10 live streams')
+            ]),
+            CarouselColumn(title='IRL', text='請選擇搜尋條件', thumbnail_image_url= "https://i.ytimg.com/vi/KZ1XCmfUkeY/hqdefault.jpg",
+            actions=[
+                MessageTemplateAction(label='人氣前十直播頻道', text='IRL top10 live streams')
+            ])
         ])
         template_message = TemplateSendMessage(
             alt_text='遊戲搜尋條件選單', template=carousel_template)
@@ -299,7 +340,7 @@ if __name__ == "__main__":
     # channels = client.search.channels('LOL', limit=1, offset=420)
     # print(json.loads(channels[0]))
     channels = client.streams.get_live_streams(game='League of Legends', limit=10)
-    print(channels[0])
+    #print(channels[0])
     # data = json.loads(str(channels[0]['channel']))
     # print(data)
     #print(json.loads(channels[1]))
