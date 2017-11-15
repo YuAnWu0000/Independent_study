@@ -96,6 +96,12 @@ def handle_follow(event):
 def handle_message(event):
     print("Handle: reply_token: " + event.reply_token + ", message: " + event.message.text)
     # content = "{}: {}".format(event.source.user_id, event.message.text)
+
+    client = TwitchClient(client_id='wgfgrtnh8pr5sxp8zu05td1zqeferf') #Twitch Auth
+    # channels = client.search.channels('LOL', limit=1, offset=420)
+    # print(json.loads(channels[0]))
+
+
     if event.message.text == '摸頭':
         line_bot_api.reply_message(
             event.reply_token,
@@ -161,58 +167,56 @@ def handle_message(event):
         carousel_template = CarouselTemplate(columns=[
             CarouselColumn(title='League of Legends', text='請選擇搜尋條件', thumbnail_image_url= "https://esetireland.files.wordpress.com/2014/12/league.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前十直播頻道', text='LOL top10 live streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='LOL top3 streams')
             ]),
             CarouselColumn(title="PLAYERUNKNOWN'S BATTLEGROUNDS", text='請選擇搜尋條件', thumbnail_image_url= "https://y4j7y8s9.ssl.hwcdn.net/wp-content/uploads/2017/05/PUBG.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前十直播頻道', text='PUBG top10 live streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='PUBG top3 streams')
             ]),
             CarouselColumn(title='Dota 2', text='請選擇搜尋條件', thumbnail_image_url= "https://cdn.pastemagazine.com/www/articles/dota%202%20ranking%20main%201.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前十直播頻道', text='Dota2 top10 live streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='Dota2 top3 streams')
             ]),
             CarouselColumn(title='Overwatch', text='請選擇搜尋條件', thumbnail_image_url= "https://static.comicvine.com/uploads/original/12/128535/5313253-5680873614-Cdr5H.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前十直播頻道', text='OW top10 live streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='OW top3 streams')
             ]),
             CarouselColumn(title='World of Warcraft', text='請選擇搜尋條件', thumbnail_image_url= "https://cdns.kinguin.net/media/category/5/-/5-1024-1024_5.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前十直播頻道', text='World of Warcraft top10 live streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='World of Warcraft top3 streams')
             ]),
             CarouselColumn(title='Hearthstone', text='請選擇搜尋條件', thumbnail_image_url= "https://www.dualshockers.com/wp-content/uploads/2014/04/maxresdefault3.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前十直播頻道', text='Hearthstone top10 live streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='Hearthstone top3 streams')
             ]),
             CarouselColumn(title='StarCraft II', text='請選擇搜尋條件', thumbnail_image_url= "https://www.hrkgame.com/media/games/.thumbnails/Pic.jpg/Pic-460x215.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前十直播頻道', text='StarCraft II top10 live streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='StarCraft II top3 streams')
             ]),
             CarouselColumn(title='Counter-Strike: Global Offensive', text='請選擇搜尋條件', thumbnail_image_url= "https://www.gizorama.com/wp-content/uploads/2016/07/csgo-660x330.png",
             actions=[
-                MessageTemplateAction(label='人氣前十直播頻道', text='CSGO top10 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='CSGO top3 streams')
             ]),
             CarouselColumn(title='Minecraft', text='請選擇搜尋條件', thumbnail_image_url= "https://thetechportal.com/wp-content/uploads/2017/05/minecraft-mew-990x452.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前十直播頻道', text='Minecraft top10 live streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='Minecraft top3 streams')
             ]),
             CarouselColumn(title='IRL', text='請選擇搜尋條件', thumbnail_image_url= "https://i.ytimg.com/vi/KZ1XCmfUkeY/hqdefault.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前十直播頻道', text='IRL top10 live streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='IRL top3 streams')
             ])
         ])
         template_message = TemplateSendMessage(
             alt_text='遊戲搜尋條件選單', template=carousel_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
-    elif event.message.text == 'LOL top10 streams':
-        client = TwitchClient(client_id='wgfgrtnh8pr5sxp8zu05td1zqeferf')
-        # channels = client.search.channels('LOL', limit=1, offset=420)
-        # print(json.loads(channels[0]))
-        channels = client.streams.get_live_streams(game='League of Legends', limit=10)
+    elif event.message.text == 'LOL top3 streams':
+        channels = client.streams.get_live_streams(game='League of Legends', limit=3)
         #print(channels[0]['channel']['url'])
+
         buttons_template = ButtonsTemplate(
-            thumbnail_image_url='https://p2.bahamut.com.tw/HOME/creationCover/88/0003709288_B.PNG',
-            title='LOL人氣前十直播頻道',
+            thumbnail_image_url='https://esetireland.files.wordpress.com/2014/12/league.jpg',
+            title='LOL人氣前三直播頻道',
             text='搜尋結果',
             actions=[ #最多四個
                 URITemplateAction(
@@ -221,34 +225,17 @@ def handle_message(event):
                     label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
                 URITemplateAction(
                     label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
-                URITemplateAction(
-                    label=channels[3]['channel']['display_name'], uri=channels[3]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[4]['channel']['display_name'], uri=channels[4]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[5]['channel']['display_name'], uri=channels[5]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[6]['channel']['display_name'], uri=channels[6]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[7]['channel']['display_name'], uri=channels[7]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[8]['channel']['display_name'], uri=channels[8]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[9]['channel']['display_name'], uri=channels[9]['channel']['url'])
             ])
         template_message = TemplateSendMessage(
             alt_text='LOL直播頻道搜尋結果', template=buttons_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
-    elif event.message.text == 'OW top10 streams':
-        client = TwitchClient(client_id='wgfgrtnh8pr5sxp8zu05td1zqeferf')
-        # channels = client.search.channels('LOL', limit=1, offset=420)
-        # print(json.loads(channels[0]))
-        channels = client.streams.get_live_streams(game='Overwatch', limit=10)
+    elif event.message.text == 'PUBG top3 streams':
+        channels = client.streams.get_live_streams(game="PLAYERUNKNOWN'S BATTLEGROUNDS", limit=3)
         #print(channels[0]['channel']['url'])
         buttons_template = ButtonsTemplate(
-            thumbnail_image_url='https://d3hmvhl7ru3t12.cloudfront.net/img/logos/overwatch-share-3d5a268515283007bdf3452e877adac466d579f4b44abbd05aa0a98aba582eeaebc4541f1154e57ec5a43693345bebda953381a7b75b58adbd29d3f3eb439ad2.jpg',
-            title='OW人氣前十直播頻道',
+            thumbnail_image_url='https://y4j7y8s9.ssl.hwcdn.net/wp-content/uploads/2017/05/PUBG.jpg',
+            title='PUBG人氣前三直播頻道',
             text='搜尋結果',
             actions=[ #最多四個
                 URITemplateAction(
@@ -257,34 +244,56 @@ def handle_message(event):
                     label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
                 URITemplateAction(
                     label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='PUBG直播頻道搜尋結果', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'Dota2 top3 streams':
+        channels = client.streams.get_live_streams(game="Dota 2", limit=3)
+        #print(channels[0]['channel']['url'])
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://cdn.pastemagazine.com/www/articles/dota%202%20ranking%20main%201.jpg',
+            title='Dota2人氣前三直播頻道',
+            text='搜尋結果',
+            actions=[ #最多四個
                 URITemplateAction(
-                    label=channels[3]['channel']['display_name'], uri=channels[3]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[4]['channel']['display_name'], uri=channels[4]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[5]['channel']['display_name'], uri=channels[5]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[6]['channel']['display_name'], uri=channels[6]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[7]['channel']['display_name'], uri=channels[7]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[8]['channel']['display_name'], uri=channels[8]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[9]['channel']['display_name'], uri=channels[9]['channel']['url'])
+                    label=channels[0]['channel']['display_name'], uri=channels[0]['channel']['url']),
+                URITemplateAction(
+                    label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
+                URITemplateAction(
+                    label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='Dota2直播頻道搜尋結果', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'OW top3 streams':
+        channels = client.streams.get_live_streams(game='Overwatch', limit=3)
+        #print(channels[0]['channel']['url'])
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://static.comicvine.com/uploads/original/12/128535/5313253-5680873614-Cdr5H.jpg',
+            title='OW人氣前三直播頻道',
+            text='搜尋結果',
+            actions=[ #最多四個
+                URITemplateAction(
+                    label=channels[0]['channel']['display_name'], uri=channels[0]['channel']['url']),
+                URITemplateAction(
+                    label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
+                URITemplateAction(
+                    label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
             ])
         template_message = TemplateSendMessage(
             alt_text='OW直播頻道搜尋結果', template=buttons_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
-    elif event.message.text == 'PUBG top10 streams':
-        client = TwitchClient(client_id='wgfgrtnh8pr5sxp8zu05td1zqeferf')
-        # channels = client.search.channels('LOL', limit=1, offset=420)
-        # print(json.loads(channels[0]))
-        channels = client.streams.get_live_streams(game="PLAYERUNKNOWN'S BATTLEGROUNDS", limit=10)
+
+    elif event.message.text == 'World of Warcraft top3 streams':
+        channels = client.streams.get_live_streams(game="World of Warcraft", limit=3)
         #print(channels[0]['channel']['url'])
         buttons_template = ButtonsTemplate(
-            thumbnail_image_url='https://y4j7y8s9.ssl.hwcdn.net/wp-content/uploads/2017/05/PUBG.jpg',
-            title='PUBG人氣前十直播頻道',
+            thumbnail_image_url='https://cdns.kinguin.net/media/category/5/-/5-1024-1024_5.jpg',
+            title='World of Warcraft人氣前三直播頻道',
             text='搜尋結果',
             actions=[ #最多四個
                 URITemplateAction(
@@ -293,23 +302,104 @@ def handle_message(event):
                     label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
                 URITemplateAction(
                     label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
-                URITemplateAction(
-                    label=channels[3]['channel']['display_name'], uri=channels[3]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[4]['channel']['display_name'], uri=channels[4]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[5]['channel']['display_name'], uri=channels[5]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[6]['channel']['display_name'], uri=channels[6]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[7]['channel']['display_name'], uri=channels[7]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[8]['channel']['display_name'], uri=channels[8]['channel']['url']),
-                # URITemplateAction(
-                #     label=channels[9]['channel']['display_name'], uri=channels[9]['channel']['url'])
             ])
         template_message = TemplateSendMessage(
-            alt_text='PUBG直播頻道搜尋結果', template=buttons_template)
+            alt_text='World of Warcraft直播頻道搜尋結果', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'Hearthstone top3 streams':
+        channels = client.streams.get_live_streams(game="Hearthstone", limit=3)
+        #print(channels[0]['channel']['url'])
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://www.dualshockers.com/wp-content/uploads/2014/04/maxresdefault3.jpg',
+            title='Hearthstone人氣前三直播頻道',
+            text='搜尋結果',
+            actions=[ #最多四個
+                URITemplateAction(
+                    label=channels[0]['channel']['display_name'], uri=channels[0]['channel']['url']),
+                URITemplateAction(
+                    label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
+                URITemplateAction(
+                    label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='Hearthstone直播頻道搜尋結果', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'StarCraft II top3 streams':
+        channels = client.streams.get_live_streams(game="StarCraft II", limit=3)
+        #print(channels[0]['channel']['url'])
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://www.hrkgame.com/media/games/.thumbnails/Pic.jpg/Pic-460x215.jpg',
+            title='StarCraft II人氣前三直播頻道',
+            text='搜尋結果',
+            actions=[ #最多四個
+                URITemplateAction(
+                    label=channels[0]['channel']['display_name'], uri=channels[0]['channel']['url']),
+                URITemplateAction(
+                    label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
+                URITemplateAction(
+                    label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='StarCraft II直播頻道搜尋結果', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'CSGO top3 streams':
+        channels = client.streams.get_live_streams(game="Counter-Strike: Global Offensive", limit=3)
+        #print(channels[0]['channel']['url'])
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://www.gizorama.com/wp-content/uploads/2016/07/csgo-660x330.png',
+            title='CSGO人氣前三直播頻道',
+            text='搜尋結果',
+            actions=[ #最多四個
+                URITemplateAction(
+                    label=channels[0]['channel']['display_name'], uri=channels[0]['channel']['url']),
+                URITemplateAction(
+                    label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
+                URITemplateAction(
+                    label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='CSGO直播頻道搜尋結果', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'Minecraft top3 streams':
+        channels = client.streams.get_live_streams(game="Minecraft", limit=3)
+        #print(channels[0]['channel']['url'])
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://thetechportal.com/wp-content/uploads/2017/05/minecraft-mew-990x452.jpg',
+            title='Minecraft人氣前三直播頻道',
+            text='搜尋結果',
+            actions=[ #最多四個
+                URITemplateAction(
+                    label=channels[0]['channel']['display_name'], uri=channels[0]['channel']['url']),
+                URITemplateAction(
+                    label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
+                URITemplateAction(
+                    label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='Minecraft直播頻道搜尋結果', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'IRL top3 streams':
+        channels = client.streams.get_live_streams(game="IRL", limit=3)
+        #print(channels[0]['channel']['url'])
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://i.ytimg.com/vi/KZ1XCmfUkeY/hqdefault.jpg',
+            title='IRL人氣前三直播頻道',
+            text='搜尋結果',
+            actions=[ #最多四個
+                URITemplateAction(
+                    label=channels[0]['channel']['display_name'], uri=channels[0]['channel']['url']),
+                URITemplateAction(
+                    label=channels[1]['channel']['display_name'], uri=channels[1]['channel']['url']),
+                URITemplateAction(
+                    label=channels[2]['channel']['display_name'], uri=channels[2]['channel']['url']),
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='IRL直播頻道搜尋結果', template=buttons_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
     elif event.message.text == 'image_carousel':
