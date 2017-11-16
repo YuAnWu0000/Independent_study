@@ -53,17 +53,19 @@ def callback():
 @handler.add(FollowEvent) #用戶成為朋友或解除封鎖
 def handle_follow(event):
     buttons_template = ButtonsTemplate(
-        thumbnail_image_url='https://www-cdn.jtvnw.net/images/twitch_logo3.jpg',
+        thumbnail_image_url='https://www.everplans.com/sites/default/files/styles/article_header_image/public/twitch-750.jpg?itok=sGzKBDM4',
         title='歡迎來到Twitch直播小幫手',
         text='請選擇服務',
         actions=[
-            URITemplateAction(
-                label='Twitch官方網頁', uri='https://go.twitch.tv/'),
+            # URITemplateAction(
+            #     label='Twitch官方網頁', uri='https://go.twitch.tv/'),
             # PostbackTemplateAction(label='ping', data='ping'),
             # PostbackTemplateAction(
             #     label='ping with text', data='ping',
             #     text='ping'),
-            MessageTemplateAction(label='Twitch遊戲搜尋功能', text='Twitch遊戲搜尋功能')
+            MessageTemplateAction(label='以遊戲搜尋Twitch直播', text='以遊戲搜尋Twitch直播'),
+            MessageTemplateAction(label='以實況主搜尋Twitch直播', text='以實況主搜尋Twitch直播'),
+            MessageTemplateAction(label='當下人氣直播', text='當下人氣直播')
         ])
     template_message = TemplateSendMessage(
         alt_text='主選單', template=buttons_template)
@@ -83,7 +85,8 @@ def handle_follow(event):
                 # PostbackTemplateAction(
                 #     label='ping with text', data='ping',
                 #     text='ping'),
-                MessageTemplateAction(label='Twitch遊戲搜尋功能', text='Twitch遊戲搜尋功能')
+                MessageTemplateAction(label='以遊戲搜尋Twitch直播', text='以遊戲搜尋Twitch直播'),
+                MessageTemplateAction(label='以實況主搜尋Twitch直播', text='以實況主搜尋Twitch直播'),
             ])
         template_message = TemplateSendMessage(
             alt_text='主選單', template=buttons_template)
@@ -120,7 +123,7 @@ def handle_message(event):
             TextSendMessage(text='翻過來給妳摸'))
     elif event.message.text == 'manu' or event.message.text == 'Manu': #直播小幫手主選單
         buttons_template = ButtonsTemplate(
-            thumbnail_image_url='https://www-cdn.jtvnw.net/images/twitch_logo3.jpg',
+            thumbnail_image_url='https://www.everplans.com/sites/default/files/styles/article_header_image/public/twitch-750.jpg?itok=sGzKBDM4',
             title='歡迎來到Twitch直播小幫手',
             text='請選擇服務',
             actions=[
@@ -130,7 +133,9 @@ def handle_message(event):
                 # PostbackTemplateAction(
                 #     label='ping with text', data='ping',
                 #     text='ping'),
-                MessageTemplateAction(label='Twitch遊戲搜尋功能', text='Twitch遊戲搜尋功能')
+                MessageTemplateAction(label='以遊戲搜尋Twitch直播', text='以遊戲搜尋Twitch直播'),
+                MessageTemplateAction(label='以實況主搜尋Twitch直播', text='以實況主搜尋Twitch直播'),
+                MessageTemplateAction(label='當下人氣直播', text='當下人氣直播')
             ])
         template_message = TemplateSendMessage(
             alt_text='主選單', template=buttons_template)
@@ -163,7 +168,7 @@ def handle_message(event):
             alt_text='Confirm alt text', template=confirm_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
-    elif event.message.text == 'Twitch遊戲搜尋功能': #遊戲搜尋條件選單
+    elif event.message.text == '以遊戲搜尋Twitch直播': #遊戲搜尋條件選單
         carousel_template = CarouselTemplate(columns=[
             CarouselColumn(title='League of Legends', text='請選擇搜尋條件', thumbnail_image_url= "https://esetireland.files.wordpress.com/2014/12/league.jpg",
             actions=[
@@ -402,6 +407,63 @@ def handle_message(event):
             alt_text='IRL直播頻道搜尋結果', template=buttons_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
+    elif event.message.text == '當下人氣直播': #當下人氣直播
+        channels = client.streams.get_live_streams(limit=10)
+
+        # for i in range(10):
+        #     print(type(channels[i]['channel']['display_name']))
+        #     print(type(channels[i]['game']))
+        #     print(type(channels[i]['viewers']))
+        #     print(type(channels[i]['channel']['logo']))
+        #     print(type(channels[i]['channel']['status']))
+
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=channels[0]['channel']['display_name'], text='Game: '+channels[0]['game']+'\n觀看人數: '+str(channels[0]['viewers']), thumbnail_image_url= channels[0]['preview']['large'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=channels[0]['channel']['url']),
+            ]),
+            CarouselColumn(title=channels[1]['channel']['display_name'], text='Game: '+channels[1]['game']+'\n觀看人數: '+str(channels[1]['viewers']), thumbnail_image_url= channels[1]['preview']['large'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=channels[1]['channel']['url']),
+            ]),
+            CarouselColumn(title=channels[2]['channel']['display_name'], text='Game: '+channels[2]['game']+'\n觀看人數: '+str(channels[2]['viewers']), thumbnail_image_url= channels[2]['preview']['large'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=channels[2]['channel']['url']),
+            ]),
+            CarouselColumn(title=channels[3]['channel']['display_name'], text='Game: '+channels[3]['game']+'\n觀看人數: '+str(channels[3]['viewers']), thumbnail_image_url= channels[3]['preview']['large'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=channels[3]['channel']['url']),
+            ]),
+            CarouselColumn(title=channels[4]['channel']['display_name'], text='Game: '+channels[4]['game']+'\n觀看人數: '+str(channels[4]['viewers']), thumbnail_image_url= channels[4]['preview']['large'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=channels[4]['channel']['url']),
+            ]),
+            CarouselColumn(title=channels[5]['channel']['display_name'], text='Game: '+channels[5]['game']+'\n觀看人數: '+str(channels[5]['viewers']), thumbnail_image_url= channels[5]['preview']['large'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=channels[5]['channel']['url']),
+            ]),
+            CarouselColumn(title=channels[6]['channel']['display_name'], text='Game: '+channels[6]['game']+'\n觀看人數: '+str(channels[6]['viewers']), thumbnail_image_url= channels[6]['preview']['large'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=channels[6]['channel']['url']),
+            ]),
+            CarouselColumn(title=channels[7]['channel']['display_name'], text='Game: '+channels[7]['game']+'\n觀看人數: '+str(channels[7]['viewers']), thumbnail_image_url= channels[7]['preview']['large'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=channels[7]['channel']['url']),
+            ]),
+            CarouselColumn(title=channels[8]['channel']['display_name'], text='Game: '+channels[8]['game']+'\n觀看人數: '+str(channels[8]['viewers']), thumbnail_image_url= channels[8]['preview']['large'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=channels[8]['channel']['url']),
+            ]),
+            CarouselColumn(title=channels[9]['channel']['display_name'], text='Game: '+channels[9]['game']+'\n觀看人數: '+str(channels[9]['viewers']), thumbnail_image_url= channels[9]['preview']['large'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=channels[9]['channel']['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='當下人氣直播', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
     elif event.message.text == 'image_carousel':
         image_carousel_template = ImageCarouselTemplate(columns=[
             ImageCarouselColumn(image_url='https://via.placeholder.com/1024x1024',
@@ -429,8 +491,12 @@ if __name__ == "__main__":
     client = TwitchClient(client_id='wgfgrtnh8pr5sxp8zu05td1zqeferf')
     # channels = client.search.channels('LOL', limit=1, offset=420)
     # print(json.loads(channels[0]))
-    channels = client.streams.get_live_streams(game='League of Legends', limit=10)
-    #print(channels[0])
+    channels = client.streams.get_live_streams(limit=10)
+    # for i in range(10):
+    #     print(channels[i]['channel']['display_name'])
+    #     print(channels[i]['game'])
+    #     print(channels[i]['viewers'])
+    #     print(channels[i]['channel']['logo'])
     # data = json.loads(str(channels[0]['channel']))
     # print(data)
     #print(json.loads(channels[1]))
