@@ -172,43 +172,53 @@ def handle_message(event):
         carousel_template = CarouselTemplate(columns=[
             CarouselColumn(title='League of Legends', text='請選擇搜尋條件', thumbnail_image_url= "https://esetireland.files.wordpress.com/2014/12/league.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前三直播頻道', text='LOL top3 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='LOL top3 streams'),
+                MessageTemplateAction(label='七天內人氣精采剪輯', text='LOL top10 clips')
             ]),
             CarouselColumn(title="PLAYERUNKNOWN'S BATTLEGROUNDS", text='請選擇搜尋條件', thumbnail_image_url= "https://y4j7y8s9.ssl.hwcdn.net/wp-content/uploads/2017/05/PUBG.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前三直播頻道', text='PUBG top3 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='PUBG top3 streams'),
+                MessageTemplateAction(label='七天內人氣精采剪輯', text='PUBG top10 clips')
             ]),
             CarouselColumn(title='Dota 2', text='請選擇搜尋條件', thumbnail_image_url= "https://cdn.pastemagazine.com/www/articles/dota%202%20ranking%20main%201.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前三直播頻道', text='Dota2 top3 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='Dota2 top3 streams'),
+                MessageTemplateAction(label='七天內人氣精采剪輯', text='Dota2 top10 clips')
             ]),
             CarouselColumn(title='Overwatch', text='請選擇搜尋條件', thumbnail_image_url= "https://static.comicvine.com/uploads/original/12/128535/5313253-5680873614-Cdr5H.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前三直播頻道', text='OW top3 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='OW top3 streams'),
+                MessageTemplateAction(label='七天內人氣精采剪輯', text='OW top10 clips')
             ]),
             CarouselColumn(title='World of Warcraft', text='請選擇搜尋條件', thumbnail_image_url= "https://cdns.kinguin.net/media/category/5/-/5-1024-1024_5.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前三直播頻道', text='World of Warcraft top3 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='World of Warcraft top3 streams'),
+                MessageTemplateAction(label='七天內人氣精采剪輯', text='World of Warcraft top10 clips')
             ]),
             CarouselColumn(title='Hearthstone', text='請選擇搜尋條件', thumbnail_image_url= "https://www.dualshockers.com/wp-content/uploads/2014/04/maxresdefault3.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前三直播頻道', text='Hearthstone top3 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='Hearthstone top3 streams'),
+                MessageTemplateAction(label='七天內人氣精采剪輯', text='Hearthstone top10 clips')
             ]),
             CarouselColumn(title='StarCraft II', text='請選擇搜尋條件', thumbnail_image_url= "https://www.hrkgame.com/media/games/.thumbnails/Pic.jpg/Pic-460x215.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前三直播頻道', text='StarCraft II top3 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='StarCraft II top3 streams'),
+                MessageTemplateAction(label='七天內人氣精采剪輯', text='StarCraft II top10 clips')
             ]),
             CarouselColumn(title='Counter-Strike: Global Offensive', text='請選擇搜尋條件', thumbnail_image_url= "https://www.gizorama.com/wp-content/uploads/2016/07/csgo-660x330.png",
             actions=[
-                MessageTemplateAction(label='人氣前三直播頻道', text='CSGO top3 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='CSGO top3 streams'),
+                MessageTemplateAction(label='七天內人氣精采剪輯', text='CSGO top10 clips')
             ]),
             CarouselColumn(title='Minecraft', text='請選擇搜尋條件', thumbnail_image_url= "https://thetechportal.com/wp-content/uploads/2017/05/minecraft-mew-990x452.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前三直播頻道', text='Minecraft top3 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='Minecraft top3 streams'),
+                MessageTemplateAction(label='七天內人氣精采剪輯', text='Minecraft top10 clips')
             ]),
             CarouselColumn(title='IRL', text='請選擇搜尋條件', thumbnail_image_url= "https://i.ytimg.com/vi/KZ1XCmfUkeY/hqdefault.jpg",
             actions=[
-                MessageTemplateAction(label='人氣前三直播頻道', text='IRL top3 streams')
+                MessageTemplateAction(label='人氣前三直播頻道', text='IRL top3 streams'),
+                MessageTemplateAction(label='七天內人氣精采剪輯', text='IRL top10 clips')
             ])
         ])
         template_message = TemplateSendMessage(
@@ -464,6 +474,108 @@ def handle_message(event):
             alt_text='當下人氣直播', template=carousel_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
+    elif event.message.text == 'LOL top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game='League of Legends', period='week')
+
+        for i in range(10):
+            if(clips[i]['title'].find('\n')!=-1):
+                clips[i]['title'] = clips[i]['title'].replace('\n', '')
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='標題:\n'+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[0]['url']),
+            ]),
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='標題:\n'+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[1]['url']),
+            ]),
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='標題:\n'+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[2]['url']),
+            ]),
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='標題:\n'+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[3]['url']),
+            ]),
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='標題:\n'+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='標題:\n'+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[5]['url']),
+            ]),
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='標題:\n'+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[6]['url']),
+            ]),
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='標題:\n'+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[7]['url']),
+            ]),
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='標題:\n'+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[8]['url']),
+            ]),
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='標題:\n'+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[9]['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='LOL top10 clips', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'OW top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game='Overwatch', period='week')
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='標題:\n'+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[0]['url']),
+            ]),
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='標題:\n'+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[1]['url']),
+            ]),
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='標題:\n'+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[2]['url']),
+            ]),
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='標題:\n'+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[3]['url']),
+            ]),
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='標題:\n'+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='標題:\n'+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[5]['url']),
+            ]),
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='標題:\n'+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[6]['url']),
+            ]),
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='標題:\n'+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[7]['url']),
+            ]),
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='標題:\n'+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[8]['url']),
+            ]),
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='標題:\n'+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[9]['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='LOL top10 clips', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
     elif event.message.text == 'image_carousel':
         image_carousel_template = ImageCarouselTemplate(columns=[
             ImageCarouselColumn(image_url='https://via.placeholder.com/1024x1024',
@@ -491,12 +603,19 @@ if __name__ == "__main__":
     client = TwitchClient(client_id='wgfgrtnh8pr5sxp8zu05td1zqeferf')
     # channels = client.search.channels('LOL', limit=1, offset=420)
     # print(json.loads(channels[0]))
-    channels = client.streams.get_live_streams(limit=10)
-    # for i in range(10):
-    #     print(channels[i]['channel']['display_name'])
-    #     print(channels[i]['game'])
-    #     print(channels[i]['viewers'])
-    #     print(channels[i]['channel']['logo'])
+    # channels = client.streams.get_live_streams(limit=10)
+    clips = client.clips.get_top(game='League of Legends', period='week')
+    for i in range(10):
+        if(clips[i]['title'].find("\n")!=-1):
+            clips[i]['title'] = clips[i]['title'].replace('\n', '')
+        print(clips[i]['url'])
+        print(clips[i]['views'])
+        print(clips[i]['title'])
+        # print(clips[i]['broadcaster']['name'])
+        # print(clips[i]['broadcaster']['display_name'])
+        # print(channels[i]['game'])
+        # print(channels[i]['viewers'])
+        # print(channels[i]['channel']['logo'])
     # data = json.loads(str(channels[0]['channel']))
     # print(data)
     #print(json.loads(channels[1]))
