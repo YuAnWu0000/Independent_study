@@ -12,22 +12,22 @@
 
 ## Issues <br />
 ### Template_message: <br />
-Button limits <br />
+_Button limits_ <br />
 <!-- ![image-w450](https://github.com/YuAnWu0000/Independent_study/raw/master/carousel_limits.PNG) <br /><br /> -->
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/carousel_limits.PNG" width = "600px" /> <br /><br />
-Carousel limits <br />
+_Carousel limits_ <br />
 <!-- ![image-w450](https://github.com/YuAnWu0000/Independent_study/raw/master/button_limits.PNG) <br /><br /> -->
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/button_limits.PNG" width = "600px" /> <br /><br />
 
 ## Features <br />
 _Manu_<br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/Manu.PNG" width = "450px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/Manu.PNG" width = "350px" /> <br /><br />
 _Games search_<br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch.PNG" width = "450px" display = inline-block />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch2.PNG" width = "450px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch.PNG" width = "350px" display = "inline-block" />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch2.PNG" width = "350px" /> <br /><br />
 _Streams search_<br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/streamsearch.PNG" width = "450px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/streamsearch.PNG" width = "350px" /> <br /><br />
 _Clips search_<br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/clipsearch.PNG" width = "450px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/clipsearch.PNG" width = "350px" /> <br /><br />
 _Nowtime streams search_<br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/nowstreamsearch.PNG" width = "450px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/nowstreamsearch.PNG" width = "350px" /> <br /><br />
