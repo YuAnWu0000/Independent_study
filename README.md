@@ -26,8 +26,11 @@ _Games search_<br />
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch.PNG" width = "350px" display = "inline-block" />
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch2.PNG" width = "350px" /> <br /><br />
 _Streams search_<br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/streamsearch.PNG" width = "350px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/streamsearch.PNG" width = "350px" display = "inline-block" />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/streamsearch2.PNG" width = "350px" /> <br /><br />
 _Clips search_<br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/clipsearch.PNG" width = "350px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/clipsearch.PNG" width = "350px" display = "inline-block" />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/clipsearch2.PNG" width = "350px" /> <br /><br />
 _Nowtime streams search_<br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/nowstreamsearch.PNG" width = "350px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/nowstreamsearch.PNG" width = "350px" display = "inline-block" />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/nowstreamsearch2.PNG" width = "350px" /> <br /><br />
