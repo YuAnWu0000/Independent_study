@@ -20,14 +20,14 @@ Carousel limits <br />
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/button_limits.PNG" width = "600px" /> <br /><br />
 
 ## Features <br />
-### Manu <br />
+### Manu ###<br />
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/Manu.PNG" width = "450px" /> <br /><br />
-### Games search <br />
+### Games search ###<br />
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch.PNG" width = "450px" display = inline-block />
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch2.PNG" width = "450px" /> <br /><br />
-### Streams search <br />
+### Streams search ###<br />
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/streamsearch.PNG" width = "450px" /> <br /><br />
-### Clips search <br />
+### Clips search ###<br />
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/clipsearch.PNG" width = "450px" /> <br /><br />
-### Nowtime streams search <br />
+### Nowtime streams search ###<br />
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/nowstreamsearch.PNG" width = "450px" /> <br /><br />
