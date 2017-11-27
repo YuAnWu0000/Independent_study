@@ -21,13 +21,13 @@ Carousel limits <br />
 
 ## Features <br />
 ### Manu <br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/Manu.PNG" width = "600px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/Manu.PNG" width = "450px" /> <br /><br />
 ### Games search <br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch.PNG" width = "300px" />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch.PNG" style="width: 300px; display: inline-block;"  />
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/gamesearch2.PNG" width = "300px" /> <br /><br />
 ### Streams search (base on game's name) <br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/streamsearch.PNG" width = "600px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/streamsearch.PNG" width = "450px" /> <br /><br />
 ### Clips search (base on game's name) <br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/clipsearch.PNG" width = "600px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/clipsearch.PNG" width = "450px" /> <br /><br />
 ### Nowtime streams search <br />
-<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/nowstreamsearch.PNG" width = "600px" /> <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/nowstreamsearch.PNG" width = "450px" /> <br /><br />
