@@ -57,21 +57,21 @@ def handle_follow(event):
         title='歡迎來到Twitch直播小幫手',
         text='請選擇服務',
         actions=[
-            # URITemplateAction(
-            #     label='Twitch官方網頁', uri='https://go.twitch.tv/'),
+            URITemplateAction(
+                label='Twitch官方網頁', uri='https://go.twitch.tv/'),
             # PostbackTemplateAction(label='ping', data='ping'),
             # PostbackTemplateAction(
             #     label='ping with text', data='ping',
             #     text='ping'),
             MessageTemplateAction(label='以遊戲搜尋Twitch直播', text='以遊戲搜尋Twitch直播'),
-            MessageTemplateAction(label='以實況主搜尋Twitch直播', text='以實況主搜尋Twitch直播'),
+            # MessageTemplateAction(label='以實況主搜尋Twitch直播', text='以實況主搜尋Twitch直播'),
             MessageTemplateAction(label='當下人氣直播', text='當下人氣直播')
         ])
     template_message = TemplateSendMessage(
         alt_text='主選單', template=buttons_template)
     line_bot_api.reply_message(event.reply_token, template_message)
 
-@handler.add(PostbackEvent) #用戶成為朋友或解除封鎖
+@handler.add(PostbackEvent)
 def handle_follow(event):
     if event.postback.data == 'ping':
         buttons_template = ButtonsTemplate(
@@ -86,7 +86,8 @@ def handle_follow(event):
                 #     label='ping with text', data='ping',
                 #     text='ping'),
                 MessageTemplateAction(label='以遊戲搜尋Twitch直播', text='以遊戲搜尋Twitch直播'),
-                MessageTemplateAction(label='以實況主搜尋Twitch直播', text='以實況主搜尋Twitch直播'),
+                # MessageTemplateAction(label='以實況主搜尋Twitch直播', text='以實況主搜尋Twitch直播'),
+                MessageTemplateAction(label='當下人氣直播', text='當下人氣直播')
             ])
         template_message = TemplateSendMessage(
             alt_text='主選單', template=buttons_template)
@@ -134,7 +135,7 @@ def handle_message(event):
                 #     label='ping with text', data='ping',
                 #     text='ping'),
                 MessageTemplateAction(label='以遊戲搜尋Twitch直播', text='以遊戲搜尋Twitch直播'),
-                MessageTemplateAction(label='以實況主搜尋Twitch直播', text='以實況主搜尋Twitch直播'),
+                # MessageTemplateAction(label='以實況主搜尋Twitch直播', text='以實況主搜尋Twitch直播'),
                 MessageTemplateAction(label='當下人氣直播', text='當下人氣直播')
             ])
         template_message = TemplateSendMessage(
@@ -215,7 +216,7 @@ def handle_message(event):
                 MessageTemplateAction(label='人氣前三直播頻道', text='Minecraft top3 streams'),
                 MessageTemplateAction(label='七天內人氣精采剪輯', text='Minecraft top10 clips')
             ]),
-            CarouselColumn(title='IRL', text='請選擇搜尋條件', thumbnail_image_url= "https://i.ytimg.com/vi/KZ1XCmfUkeY/hqdefault.jpg",
+            CarouselColumn(title='In real life', text='請選擇搜尋條件', thumbnail_image_url= "https://i.ytimg.com/vi/KZ1XCmfUkeY/hqdefault.jpg",
             actions=[
                 MessageTemplateAction(label='人氣前三直播頻道', text='IRL top3 streams'),
                 MessageTemplateAction(label='七天內人氣精采剪輯', text='IRL top10 clips')
@@ -403,7 +404,7 @@ def handle_message(event):
         #print(channels[0]['channel']['url'])
         buttons_template = ButtonsTemplate(
             thumbnail_image_url='https://i.ytimg.com/vi/KZ1XCmfUkeY/hqdefault.jpg',
-            title='IRL人氣前三直播頻道',
+            title='In real life人氣前三直播頻道',
             text='搜尋結果',
             actions=[ #最多四個
                 URITemplateAction(
@@ -417,15 +418,17 @@ def handle_message(event):
             alt_text='IRL直播頻道搜尋結果', template=buttons_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
-    elif event.message.text == '當下人氣直播': #當下人氣直播
+    elif event.message.text == '當下人氣直播':
         channels = client.streams.get_live_streams(limit=10)
 
-        # for i in range(10):
-        #     print(type(channels[i]['channel']['display_name']))
-        #     print(type(channels[i]['game']))
-        #     print(type(channels[i]['viewers']))
-        #     print(type(channels[i]['channel']['logo']))
-        #     print(type(channels[i]['channel']['status']))
+        for i in range(10):
+            if( len(channels[i]['game']) >= 30 ):
+                channels[i]['game'] = channels[i]['game'][0:30]+'...'
+            # print(channels[i]['channel']['display_name'])
+            # print(channels[i]['game'])
+            # print(channels[i]['viewers'])
+            # print(channels[i]['channel']['logo'])
+            # print(channels[i]['channel']['status'])
 
         carousel_template = CarouselTemplate(columns=[
             CarouselColumn(title=channels[0]['channel']['display_name'], text='Game: '+channels[0]['game']+'\n觀看人數: '+str(channels[0]['viewers']), thumbnail_image_url= channels[0]['preview']['large'],
@@ -477,47 +480,48 @@ def handle_message(event):
     elif event.message.text == 'LOL top10 clips': #七天內精采剪輯
         clips = client.clips.get_top(game='League of Legends', period='week')
 
-        for i in range(10):
-            if(clips[i]['title'].find('\n')!=-1):
-                clips[i]['title'] = clips[i]['title'].replace('\n', '')
+        for i in range(10): #標題過長導致Line Template_message無法顯示 故修正
+            if( len(clips[i]['title']) >= 30 ):
+                clips[i]['title'] = clips[i]['title'][0:30]+'...'
+
         carousel_template = CarouselTemplate(columns=[
-            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='標題:\n'+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='觀看人數: '+str(clips[0]['views'])+'\n標題: '+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[0]['url']),
             ]),
-            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='標題:\n'+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='觀看人數: '+str(clips[1]['views'])+'\n標題: '+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[1]['url']),
             ]),
-            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='標題:\n'+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='觀看人數: '+str(clips[2]['views'])+'\n標題: '+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[2]['url']),
             ]),
-            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='標題:\n'+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='觀看人數: '+str(clips[3]['views'])+'\n標題: '+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[3]['url']),
             ]),
-            # CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='標題:\n'+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
-            # actions=[
-            #     URITemplateAction(label='開始觀看', uri=clips[4]['url']),
-            # ]),
-            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='標題:\n'+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='觀看人數: '+str(clips[4]['views'])+'\n標題: '+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='觀看人數: '+str(clips[5]['views'])+'\n標題: '+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[5]['url']),
             ]),
-            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='標題:\n'+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='觀看人數: '+str(clips[6]['views'])+'\n標題: '+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[6]['url']),
             ]),
-            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='標題:\n'+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='觀看人數: '+str(clips[7]['views'])+'\n標題: '+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[7]['url']),
             ]),
-            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='標題:\n'+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='觀看人數: '+str(clips[8]['views'])+'\n標題: '+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[8]['url']),
             ]),
-            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='標題:\n'+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='觀看人數: '+str(clips[9]['views'])+'\n標題: '+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[9]['url']),
             ]),
@@ -527,53 +531,490 @@ def handle_message(event):
             alt_text='LOL top10 clips', template=carousel_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
-    elif event.message.text == 'OW top10 clips': #七天內精采剪輯
-        clips = client.clips.get_top(game='Overwatch', period='week')
+    elif event.message.text == 'PUBG top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game="PLAYERUNKNOWN'S BATTLEGROUNDS", period='week')
+
+        for i in range(10): #標題過長導致Line Template_message無法顯示 故修正
+            if( len(clips[i]['title']) >= 30 ):
+                clips[i]['title'] = clips[i]['title'][0:30]+'...'
+
         carousel_template = CarouselTemplate(columns=[
-            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='標題:\n'+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='觀看人數: '+str(clips[0]['views'])+'\n標題: '+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[0]['url']),
             ]),
-            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='標題:\n'+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='觀看人數: '+str(clips[1]['views'])+'\n標題: '+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[1]['url']),
             ]),
-            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='標題:\n'+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='觀看人數: '+str(clips[2]['views'])+'\n標題: '+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[2]['url']),
             ]),
-            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='標題:\n'+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='觀看人數: '+str(clips[3]['views'])+'\n標題: '+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[3]['url']),
             ]),
-            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='標題:\n'+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='觀看人數: '+str(clips[4]['views'])+'\n標題: '+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[4]['url']),
             ]),
-            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='標題:\n'+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='觀看人數: '+str(clips[5]['views'])+'\n標題: '+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[5]['url']),
             ]),
-            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='標題:\n'+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='觀看人數: '+str(clips[6]['views'])+'\n標題: '+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[6]['url']),
             ]),
-            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='標題:\n'+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='觀看人數: '+str(clips[7]['views'])+'\n標題: '+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[7]['url']),
             ]),
-            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='標題:\n'+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='觀看人數: '+str(clips[8]['views'])+'\n標題: '+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[8]['url']),
             ]),
-            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='標題:\n'+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='觀看人數: '+str(clips[9]['views'])+'\n標題: '+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[9]['url']),
             ]),
 
         ])
         template_message = TemplateSendMessage(
-            alt_text='LOL top10 clips', template=carousel_template)
+            alt_text='PUBG top10 clips', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'Dota2 top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game='Dota 2', period='week')
+
+        for i in range(10): #標題過長導致Line Template_message無法顯示 故修正
+            if( len(clips[i]['title']) >= 30 ):
+                clips[i]['title'] = clips[i]['title'][0:30]+'...'
+
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='觀看人數: '+str(clips[0]['views'])+'\n標題: '+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[0]['url']),
+            ]),
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='觀看人數: '+str(clips[1]['views'])+'\n標題: '+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[1]['url']),
+            ]),
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='觀看人數: '+str(clips[2]['views'])+'\n標題: '+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[2]['url']),
+            ]),
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='觀看人數: '+str(clips[3]['views'])+'\n標題: '+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[3]['url']),
+            ]),
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='觀看人數: '+str(clips[4]['views'])+'\n標題: '+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='觀看人數: '+str(clips[5]['views'])+'\n標題: '+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[5]['url']),
+            ]),
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='觀看人數: '+str(clips[6]['views'])+'\n標題: '+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[6]['url']),
+            ]),
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='觀看人數: '+str(clips[7]['views'])+'\n標題: '+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[7]['url']),
+            ]),
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='觀看人數: '+str(clips[8]['views'])+'\n標題: '+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[8]['url']),
+            ]),
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='觀看人數: '+str(clips[9]['views'])+'\n標題: '+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[9]['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Dota2 top10 clips', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'OW top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game='Overwatch', period='week')
+
+        for i in range(10): #標題過長導致Line Template_message無法顯示 故修正
+            if( len(clips[i]['title']) >= 30 ):
+                clips[i]['title'] = clips[i]['title'][0:30]+'...'
+
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='觀看人數: '+str(clips[0]['views'])+'\n標題: '+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[0]['url']),
+            ]),
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='觀看人數: '+str(clips[1]['views'])+'\n標題: '+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[1]['url']),
+            ]),
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='觀看人數: '+str(clips[2]['views'])+'\n標題: '+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[2]['url']),
+            ]),
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='觀看人數: '+str(clips[3]['views'])+'\n標題: '+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[3]['url']),
+            ]),
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='觀看人數: '+str(clips[4]['views'])+'\n標題: '+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='觀看人數: '+str(clips[5]['views'])+'\n標題: '+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[5]['url']),
+            ]),
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='觀看人數: '+str(clips[6]['views'])+'\n標題: '+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[6]['url']),
+            ]),
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='觀看人數: '+str(clips[7]['views'])+'\n標題: '+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[7]['url']),
+            ]),
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='觀看人數: '+str(clips[8]['views'])+'\n標題: '+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[8]['url']),
+            ]),
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='觀看人數: '+str(clips[9]['views'])+'\n標題: '+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[9]['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='OW top10 clips', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'World of Warcraft top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game='World of Warcraft', period='week')
+
+        for i in range(10): #標題過長導致Line Template_message無法顯示 故修正
+            if( len(clips[i]['title']) >= 30 ):
+                clips[i]['title'] = clips[i]['title'][0:30]+'...'
+
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='觀看人數: '+str(clips[0]['views'])+'\n標題: '+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[0]['url']),
+            ]),
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='觀看人數: '+str(clips[1]['views'])+'\n標題: '+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[1]['url']),
+            ]),
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='觀看人數: '+str(clips[2]['views'])+'\n標題: '+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[2]['url']),
+            ]),
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='觀看人數: '+str(clips[3]['views'])+'\n標題: '+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[3]['url']),
+            ]),
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='觀看人數: '+str(clips[4]['views'])+'\n標題: '+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='觀看人數: '+str(clips[5]['views'])+'\n標題: '+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[5]['url']),
+            ]),
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='觀看人數: '+str(clips[6]['views'])+'\n標題: '+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[6]['url']),
+            ]),
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='觀看人數: '+str(clips[7]['views'])+'\n標題: '+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[7]['url']),
+            ]),
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='觀看人數: '+str(clips[8]['views'])+'\n標題: '+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[8]['url']),
+            ]),
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='觀看人數: '+str(clips[9]['views'])+'\n標題: '+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[9]['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='World of Warcraft', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'Hearthstone top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game='Hearthstone', period='week')
+
+        for i in range(10): #標題過長導致Line Template_message無法顯示 故修正
+            if( len(clips[i]['title']) >= 30 ):
+                clips[i]['title'] = clips[i]['title'][0:30]+'...'
+
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='觀看人數: '+str(clips[0]['views'])+'\n標題: '+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[0]['url']),
+            ]),
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='觀看人數: '+str(clips[1]['views'])+'\n標題: '+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[1]['url']),
+            ]),
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='觀看人數: '+str(clips[2]['views'])+'\n標題: '+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[2]['url']),
+            ]),
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='觀看人數: '+str(clips[3]['views'])+'\n標題: '+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[3]['url']),
+            ]),
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='觀看人數: '+str(clips[4]['views'])+'\n標題: '+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='觀看人數: '+str(clips[5]['views'])+'\n標題: '+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[5]['url']),
+            ]),
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='觀看人數: '+str(clips[6]['views'])+'\n標題: '+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[6]['url']),
+            ]),
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='觀看人數: '+str(clips[7]['views'])+'\n標題: '+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[7]['url']),
+            ]),
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='觀看人數: '+str(clips[8]['views'])+'\n標題: '+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[8]['url']),
+            ]),
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='觀看人數: '+str(clips[9]['views'])+'\n標題: '+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[9]['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Hearthstone top10 clips', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'StarCraft II top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game='StarCraft II', period='week')
+
+        for i in range(10): #標題過長導致Line Template_message無法顯示 故修正
+            if( len(clips[i]['title']) >= 30 ):
+                clips[i]['title'] = clips[i]['title'][0:30]+'...'
+
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='觀看人數: '+str(clips[0]['views'])+'\n標題: '+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[0]['url']),
+            ]),
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='觀看人數: '+str(clips[1]['views'])+'\n標題: '+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[1]['url']),
+            ]),
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='觀看人數: '+str(clips[2]['views'])+'\n標題: '+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[2]['url']),
+            ]),
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='觀看人數: '+str(clips[3]['views'])+'\n標題: '+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[3]['url']),
+            ]),
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='觀看人數: '+str(clips[4]['views'])+'\n標題: '+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='觀看人數: '+str(clips[5]['views'])+'\n標題: '+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[5]['url']),
+            ]),
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='觀看人數: '+str(clips[6]['views'])+'\n標題: '+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[6]['url']),
+            ]),
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='觀看人數: '+str(clips[7]['views'])+'\n標題: '+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[7]['url']),
+            ]),
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='觀看人數: '+str(clips[8]['views'])+'\n標題: '+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[8]['url']),
+            ]),
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='觀看人數: '+str(clips[9]['views'])+'\n標題: '+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[9]['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='StarCraft II top10 clips', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'CSGO top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game='Counter-Strike: Global Offensive', period='week')
+
+        for i in range(10): #標題過長導致Line Template_message無法顯示 故修正
+            if( len(clips[i]['title']) >= 30 ):
+                clips[i]['title'] = clips[i]['title'][0:30]+'...'
+
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='觀看人數: '+str(clips[0]['views'])+'\n標題: '+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[0]['url']),
+            ]),
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='觀看人數: '+str(clips[1]['views'])+'\n標題: '+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[1]['url']),
+            ]),
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='觀看人數: '+str(clips[2]['views'])+'\n標題: '+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[2]['url']),
+            ]),
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='觀看人數: '+str(clips[3]['views'])+'\n標題: '+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[3]['url']),
+            ]),
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='觀看人數: '+str(clips[4]['views'])+'\n標題: '+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='觀看人數: '+str(clips[5]['views'])+'\n標題: '+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[5]['url']),
+            ]),
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='觀看人數: '+str(clips[6]['views'])+'\n標題: '+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[6]['url']),
+            ]),
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='觀看人數: '+str(clips[7]['views'])+'\n標題: '+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[7]['url']),
+            ]),
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='觀看人數: '+str(clips[8]['views'])+'\n標題: '+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[8]['url']),
+            ]),
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='觀看人數: '+str(clips[9]['views'])+'\n標題: '+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[9]['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='CSGO top10 clips', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'Minecraft top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game='Minecraft', period='week')
+
+        for i in range(10): #標題過長導致Line Template_message無法顯示 故修正
+            if( len(clips[i]['title']) >= 30 ):
+                clips[i]['title'] = clips[i]['title'][0:30]+'...'
+
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='觀看人數: '+str(clips[0]['views'])+'\n標題: '+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[0]['url']),
+            ]),
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='觀看人數: '+str(clips[1]['views'])+'\n標題: '+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[1]['url']),
+            ]),
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='觀看人數: '+str(clips[2]['views'])+'\n標題: '+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[2]['url']),
+            ]),
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='觀看人數: '+str(clips[3]['views'])+'\n標題: '+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[3]['url']),
+            ]),
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='觀看人數: '+str(clips[4]['views'])+'\n標題: '+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='觀看人數: '+str(clips[5]['views'])+'\n標題: '+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[5]['url']),
+            ]),
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='觀看人數: '+str(clips[6]['views'])+'\n標題: '+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[6]['url']),
+            ]),
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='觀看人數: '+str(clips[7]['views'])+'\n標題: '+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[7]['url']),
+            ]),
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='觀看人數: '+str(clips[8]['views'])+'\n標題: '+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[8]['url']),
+            ]),
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='觀看人數: '+str(clips[9]['views'])+'\n標題: '+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[9]['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Minecraft top10 clips', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+
+    elif event.message.text == 'IRL top10 clips': #七天內精采剪輯
+        clips = client.clips.get_top(game='IRL', period='week')
+
+        for i in range(10): #標題過長導致Line Template_message無法顯示 故修正
+            if( len(clips[i]['title']) >= 30 ):
+                clips[i]['title'] = clips[i]['title'][0:30]+'...'
+
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=clips[0]['broadcaster']['display_name'], text='觀看人數: '+str(clips[0]['views'])+'\n標題: '+clips[0]['title'], thumbnail_image_url= clips[0]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[0]['url']),
+            ]),
+            CarouselColumn(title=clips[1]['broadcaster']['display_name'], text='觀看人數: '+str(clips[1]['views'])+'\n標題: '+clips[1]['title'], thumbnail_image_url= clips[1]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[1]['url']),
+            ]),
+            CarouselColumn(title=clips[2]['broadcaster']['display_name'], text='觀看人數: '+str(clips[2]['views'])+'\n標題: '+clips[2]['title'], thumbnail_image_url= clips[2]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[2]['url']),
+            ]),
+            CarouselColumn(title=clips[3]['broadcaster']['display_name'], text='觀看人數: '+str(clips[3]['views'])+'\n標題: '+clips[3]['title'], thumbnail_image_url= clips[3]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[3]['url']),
+            ]),
+            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='觀看人數: '+str(clips[4]['views'])+'\n標題: '+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            ]),
+            CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='觀看人數: '+str(clips[5]['views'])+'\n標題: '+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[5]['url']),
+            ]),
+            CarouselColumn(title=clips[6]['broadcaster']['display_name'], text='觀看人數: '+str(clips[6]['views'])+'\n標題: '+clips[6]['title'], thumbnail_image_url= clips[6]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[6]['url']),
+            ]),
+            CarouselColumn(title=clips[7]['broadcaster']['display_name'], text='觀看人數: '+str(clips[7]['views'])+'\n標題: '+clips[7]['title'], thumbnail_image_url= clips[7]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[7]['url']),
+            ]),
+            CarouselColumn(title=clips[8]['broadcaster']['display_name'], text='觀看人數: '+str(clips[8]['views'])+'\n標題: '+clips[8]['title'], thumbnail_image_url= clips[8]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[8]['url']),
+            ]),
+            CarouselColumn(title=clips[9]['broadcaster']['display_name'], text='觀看人數: '+str(clips[9]['views'])+'\n標題: '+clips[9]['title'], thumbnail_image_url= clips[9]['thumbnails']['medium'],
+            actions=[
+                URITemplateAction(label='開始觀看', uri=clips[9]['url']),
+            ]),
+
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='IRL top10 clips', template=carousel_template)
         line_bot_api.reply_message(event.reply_token, template_message)
 
     elif event.message.text == 'image_carousel':
@@ -604,13 +1045,13 @@ if __name__ == "__main__":
     # channels = client.search.channels('LOL', limit=1, offset=420)
     # print(json.loads(channels[0]))
     # channels = client.streams.get_live_streams(limit=10)
-    clips = client.clips.get_top(game='League of Legends', period='week')
-    for i in range(10):
-        # if(clips[i]['title'].find("\n")!=-1):
-        #     clips[i]['title'] = clips[i]['title'].replace('\n', '')
-        print(clips[i]['url'])
-        print(clips[i]['views'])
-        print(clips[i]['title'])
+    # clips = client.clips.get_top(game='League of Legends', period='week')
+    # for i in range(10):
+    #     # if(clips[i]['title'].find("\n")!=-1):
+    #     #     clips[i]['title'] = clips[i]['title'].replace('\n', '')
+    #     print(clips[i]['url'])
+    #     print(clips[i]['views'])
+    #     print(clips[i]['title'])
         # print(clips[i]['broadcaster']['name'])
         # print(clips[i]['broadcaster']['display_name'])
         # print(channels[i]['game'])
