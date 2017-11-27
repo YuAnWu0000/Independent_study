@@ -12,6 +12,6 @@
 ## Issues <br />
 ### Template_message: <br />
 Button limits <br />
-![image](https://github.com/YuAnWu0000/Independent_study/raw/master/carousel_limits.PNG) <br /><br />
+![image](https://github.com/YuAnWu0000/Independent_study/raw/master/carousel_limits.PNG){:width="600px" height="auto"} <br /><br />
 Carousel limits <br />
-![image](https://github.com/YuAnWu0000/Independent_study/raw/master/carousel_limits.PNG) <br /><br />
+![image](https://github.com/YuAnWu0000/Independent_study/raw/master/carousel_limits.PNG){:width="600px" height="auto"} <br /><br />
