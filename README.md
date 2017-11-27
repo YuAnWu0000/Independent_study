@@ -13,5 +13,7 @@
 ### Template_message: <br />
 Button limits <br />
 ![image-w450](https://github.com/YuAnWu0000/Independent_study/raw/master/carousel_limits.PNG) <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/carousel_limits.PNG" width = "600px" /> <br />
 Carousel limits <br />
-![image-w450](https://github.com/YuAnWu0000/Independent_study/raw/master/carousel_limits.PNG) <br /><br />
+![image-w450](https://github.com/YuAnWu0000/Independent_study/raw/master/button_limits.PNG) <br /><br />
+<img src="https://github.com/YuAnWu0000/Independent_study/raw/master/button_limits.PNG" width = "600px" /> <br />
