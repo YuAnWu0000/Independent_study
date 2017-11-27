@@ -497,10 +497,10 @@ def handle_message(event):
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[3]['url']),
             ]),
-            CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='標題:\n'+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
-            actions=[
-                URITemplateAction(label='開始觀看', uri=clips[4]['url']),
-            ]),
+            # CarouselColumn(title=clips[4]['broadcaster']['display_name'], text='標題:\n'+clips[4]['title'], thumbnail_image_url= clips[4]['thumbnails']['medium'],
+            # actions=[
+            #     URITemplateAction(label='開始觀看', uri=clips[4]['url']),
+            # ]),
             CarouselColumn(title=clips[5]['broadcaster']['display_name'], text='標題:\n'+clips[5]['title'], thumbnail_image_url= clips[5]['thumbnails']['medium'],
             actions=[
                 URITemplateAction(label='開始觀看', uri=clips[5]['url']),
@@ -606,8 +606,8 @@ if __name__ == "__main__":
     # channels = client.streams.get_live_streams(limit=10)
     clips = client.clips.get_top(game='League of Legends', period='week')
     for i in range(10):
-        if(clips[i]['title'].find("\n")!=-1):
-            clips[i]['title'] = clips[i]['title'].replace('\n', '')
+        # if(clips[i]['title'].find("\n")!=-1):
+        #     clips[i]['title'] = clips[i]['title'].replace('\n', '')
         print(clips[i]['url'])
         print(clips[i]['views'])
         print(clips[i]['title'])
