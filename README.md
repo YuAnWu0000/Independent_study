@@ -12,10 +12,10 @@
 
 ## Issues <br />
 ### Template_message: <br />
-_Button limits_ <br />
+ _Carousel template limits_ <br />
 <!-- ![image-w450](https://github.com/YuAnWu0000/Independent_study/raw/master/carousel_limits.PNG) <br /><br /> -->
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/carousel_limits.PNG" width = "600px" /> <br /><br />
-_Carousel limits_ <br />
+_Button template limits_ <br />
 <!-- ![image-w450](https://github.com/YuAnWu0000/Independent_study/raw/master/button_limits.PNG) <br /><br /> -->
 <img src="https://github.com/YuAnWu0000/Independent_study/raw/master/image/button_limits.PNG" width = "600px" /> <br /><br />
 
